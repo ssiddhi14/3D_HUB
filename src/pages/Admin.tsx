@@ -22,9 +22,11 @@ const Admin = () => {
   const [pPrice, setPPrice] = useState("");
   const [pDesc, setPDesc] = useState("");
   const [pCat, setPCat] = useState("");
-  const [pImage, setPImage] = useState("");
+  const [pImages, setPImages] = useState<File[]>([]);
+  const [pExistingImages, setPExistingImages] = useState<string[]>([]);
   const [pFeatured, setPFeatured] = useState(false);
   const [editingProduct, setEditingProduct] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   // Category form
   const [cName, setCName] = useState("");
