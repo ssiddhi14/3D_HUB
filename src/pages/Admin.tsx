@@ -177,8 +177,8 @@ const Admin = () => {
                 <input type="checkbox" checked={pFeatured} onChange={(e) => setPFeatured(e.target.checked)} className="accent-primary" /> Featured
               </label>
               <div className="flex gap-2">
-                <button onClick={handleSaveProduct} className="flex items-center gap-2 bg-primary text-primary-foreground rounded-lg px-6 py-2 font-medium hover:opacity-90">
-                  <Plus size={16} /> {editingProduct ? "Update" : "Add Product"}
+                <button onClick={handleSaveProduct} disabled={uploading} className="flex items-center gap-2 bg-primary text-primary-foreground rounded-lg px-6 py-2 font-medium hover:opacity-90 disabled:opacity-50">
+                  {uploading ? <><Loader2 size={16} className="animate-spin" /> Uploading...</> : <><Upload size={16} /> {editingProduct ? "Update" : "Add Product"}</>}
                 </button>
                 {editingProduct && (
                   <button onClick={resetProductForm} className="px-4 py-2 rounded-lg border border-border text-muted-foreground hover:text-foreground">Cancel</button>
