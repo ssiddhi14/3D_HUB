@@ -152,7 +152,21 @@ const Admin = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <input placeholder="Name" value={pName} onChange={(e) => setPName(e.target.value)} className="bg-secondary border border-border rounded-lg px-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary" />
                 <input placeholder="Price" type="number" value={pPrice} onChange={(e) => setPPrice(e.target.value)} className="bg-secondary border border-border rounded-lg px-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary" />
-                <input placeholder="Image URL" value={pImage} onChange={(e) => setPImage(e.target.value)} className="bg-secondary border border-border rounded-lg px-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary" />
+                <div className="sm:col-span-2 space-y-2">
+                  <label className="block text-sm text-muted-foreground">Upload Images (jpg, png, webp)</label>
+                  <input type="file" multiple accept="image/jpeg,image/png,image/webp" onChange={(e) => setPImages(Array.from(e.target.files || []))} className="bg-secondary border border-border rounded-lg px-4 py-2 text-foreground file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:bg-primary file:text-primary-foreground file:text-sm file:font-medium file:cursor-pointer w-full" />
+                  {pImages.length > 0 && <p className="text-xs text-muted-foreground">{pImages.length} new file(s) selected</p>}
+                  {pExistingImages.length > 0 && (
+                    <div className="flex gap-2 flex-wrap">
+                      {pExistingImages.map((url, i) => (
+                        <div key={i} className="relative group">
+                          <img src={url} alt="" className="w-16 h-16 rounded-lg object-cover bg-secondary" />
+                          <button onClick={() => setPExistingImages(prev => prev.filter((_, idx) => idx !== i))} className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground rounded-full w-5 h-5 text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">×</button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
                 <select value={pCat} onChange={(e) => setPCat(e.target.value)} className="bg-secondary border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary">
                   <option value="">No Category</option>
                   {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
