@@ -45,27 +45,53 @@ const Admin = () => {
   if (!user || user.email !== ADMIN_EMAIL) return <Navigate to="/auth" replace />;
 
   const resetProductForm = () => {
-    setPName(""); setPPrice(""); setPDesc(""); setPCat(""); setPImage(""); setPFeatured(false); setEditingProduct(null);
+    setPName(""); setPPrice(""); setPDesc(""); setPCat(""); setPImages([]); setPExistingImages([]); setPFeatured(false); setEditingProduct(null);
+  };
+
+  const uploadImages = async (files: File[]): Promise<string[]> => {
+    const urls: string[] = [];
+    for (const file of files) {
+      const ext = file.name.split(".").pop();
+      const path = `${crypto.randomUUID()}.${ext}`;
+      const { error } = await supabase.storage.from("product-images").upload(path, file);
+      if (error) throw error;
+      const { data: urlData } = supabase.storage.from("product-images").getPublicUrl(path);
+      urls.push(urlData.publicUrl);
+    }
+    return urls;
   };
 
   const handleSaveProduct = async () => {
-    const payload = {
-      name: pName,
-      price: parseFloat(pPrice),
-      description: pDesc || null,
-      category_id: pCat || null,
-      images: pImage ? [pImage] : [],
-      featured: pFeatured,
-    };
+    setUploading(true);
+    try {
+      let imageUrls = [...pExistingImages];
+      if (pImages.length > 0) {
+        const newUrls = await uploadImages(pImages);
+        imageUrls = [...imageUrls, ...newUrls];
+      }
 
-    if (editingProduct) {
-      const { error } = await supabase.from("products").update(payload).eq("id", editingProduct);
-      if (error) toast({ title: "Error updating product", variant: "destructive" });
-      else { toast({ title: "Product updated!" }); resetProductForm(); }
-    } else {
-      const { error } = await supabase.from("products").insert(payload);
-      if (error) toast({ title: "Error adding product", variant: "destructive" });
-      else { toast({ title: "Product added!" }); resetProductForm(); }
+      const payload = {
+        name: pName,
+        price: parseFloat(pPrice),
+        description: pDesc || null,
+        category_id: pCat || null,
+        images: imageUrls,
+        featured: pFeatured,
+      };
+
+      if (editingProduct) {
+        const { error } = await supabase.from("products").update(payload).eq("id", editingProduct);
+        if (error) toast({ title: "Error updating product", variant: "destructive" });
+        else { toast({ title: "Product updated!" }); resetProductForm(); }
+      } else {
+        const { error } = await supabase.from("products").insert(payload);
+        if (error) toast({ title: "Error adding product", variant: "destructive" });
+        else { toast({ title: "Product added!" }); resetProductForm(); }
+      }
+    } catch {
+      toast({ title: "Error uploading images", variant: "destructive" });
+    } finally {
+      setUploading(false);
     }
   };
 
