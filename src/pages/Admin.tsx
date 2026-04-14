@@ -4,7 +4,7 @@ import { Navigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useProducts, useCategories } from "@/hooks/useProducts";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Trash2, Edit2, Package, FolderOpen, ShoppingBag } from "lucide-react";
+import { Plus, Trash2, Edit2, Package, FolderOpen, ShoppingBag, Upload, Loader2 } from "lucide-react";
 import type { Json } from "@/integrations/supabase/types";
 
 const ADMIN_EMAIL = "pragya@gmail.com";
