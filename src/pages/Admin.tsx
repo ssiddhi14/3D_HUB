@@ -102,7 +102,7 @@ const Admin = () => {
   };
 
   const handleEditProduct = (p: any) => {
-    setPName(p.name); setPPrice(String(p.price)); setPDesc(p.description || ""); setPCat(p.category_id || ""); setPImage(p.images?.[0] || ""); setPFeatured(p.featured); setEditingProduct(p.id);
+    setPName(p.name); setPPrice(String(p.price)); setPDesc(p.description || ""); setPCat(p.category_id || ""); setPImages([]); setPExistingImages(p.images || []); setPFeatured(p.featured); setEditingProduct(p.id);
   };
 
   const handleAddCategory = async () => {
