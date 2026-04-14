@@ -4,7 +4,7 @@ import { Navigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useProducts, useCategories } from "@/hooks/useProducts";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Trash2, Edit2, Package, FolderOpen, ShoppingBag } from "lucide-react";
+import { Plus, Trash2, Edit2, Package, FolderOpen, ShoppingBag, Upload, Loader2 } from "lucide-react";
 import type { Json } from "@/integrations/supabase/types";
 
 const ADMIN_EMAIL = "pragya@gmail.com";
@@ -22,9 +22,11 @@ const Admin = () => {
   const [pPrice, setPPrice] = useState("");
   const [pDesc, setPDesc] = useState("");
   const [pCat, setPCat] = useState("");
-  const [pImage, setPImage] = useState("");
+  const [pImages, setPImages] = useState<File[]>([]);
+  const [pExistingImages, setPExistingImages] = useState<string[]>([]);
   const [pFeatured, setPFeatured] = useState(false);
   const [editingProduct, setEditingProduct] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   // Category form
   const [cName, setCName] = useState("");
@@ -43,27 +45,53 @@ const Admin = () => {
   if (!user || user.email !== ADMIN_EMAIL) return <Navigate to="/auth" replace />;
 
   const resetProductForm = () => {
-    setPName(""); setPPrice(""); setPDesc(""); setPCat(""); setPImage(""); setPFeatured(false); setEditingProduct(null);
+    setPName(""); setPPrice(""); setPDesc(""); setPCat(""); setPImages([]); setPExistingImages([]); setPFeatured(false); setEditingProduct(null);
+  };
+
+  const uploadImages = async (files: File[]): Promise<string[]> => {
+    const urls: string[] = [];
+    for (const file of files) {
+      const ext = file.name.split(".").pop();
+      const path = `${crypto.randomUUID()}.${ext}`;
+      const { error } = await supabase.storage.from("product-images").upload(path, file);
+      if (error) throw error;
+      const { data: urlData } = supabase.storage.from("product-images").getPublicUrl(path);
+      urls.push(urlData.publicUrl);
+    }
+    return urls;
   };
 
   const handleSaveProduct = async () => {
-    const payload = {
-      name: pName,
-      price: parseFloat(pPrice),
-      description: pDesc || null,
-      category_id: pCat || null,
-      images: pImage ? [pImage] : [],
-      featured: pFeatured,
-    };
+    setUploading(true);
+    try {
+      let imageUrls = [...pExistingImages];
+      if (pImages.length > 0) {
+        const newUrls = await uploadImages(pImages);
+        imageUrls = [...imageUrls, ...newUrls];
+      }
 
-    if (editingProduct) {
-      const { error } = await supabase.from("products").update(payload).eq("id", editingProduct);
-      if (error) toast({ title: "Error updating product", variant: "destructive" });
-      else { toast({ title: "Product updated!" }); resetProductForm(); }
-    } else {
-      const { error } = await supabase.from("products").insert(payload);
-      if (error) toast({ title: "Error adding product", variant: "destructive" });
-      else { toast({ title: "Product added!" }); resetProductForm(); }
+      const payload = {
+        name: pName,
+        price: parseFloat(pPrice),
+        description: pDesc || null,
+        category_id: pCat || null,
+        images: imageUrls,
+        featured: pFeatured,
+      };
+
+      if (editingProduct) {
+        const { error } = await supabase.from("products").update(payload).eq("id", editingProduct);
+        if (error) toast({ title: "Error updating product", variant: "destructive" });
+        else { toast({ title: "Product updated!" }); resetProductForm(); }
+      } else {
+        const { error } = await supabase.from("products").insert(payload);
+        if (error) toast({ title: "Error adding product", variant: "destructive" });
+        else { toast({ title: "Product added!" }); resetProductForm(); }
+      }
+    } catch {
+      toast({ title: "Error uploading images", variant: "destructive" });
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -74,7 +102,7 @@ const Admin = () => {
   };
 
   const handleEditProduct = (p: any) => {
-    setPName(p.name); setPPrice(String(p.price)); setPDesc(p.description || ""); setPCat(p.category_id || ""); setPImage(p.images?.[0] || ""); setPFeatured(p.featured); setEditingProduct(p.id);
+    setPName(p.name); setPPrice(String(p.price)); setPDesc(p.description || ""); setPCat(p.category_id || ""); setPImages([]); setPExistingImages(p.images || []); setPFeatured(p.featured); setEditingProduct(p.id);
   };
 
   const handleAddCategory = async () => {
@@ -124,7 +152,21 @@ const Admin = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <input placeholder="Name" value={pName} onChange={(e) => setPName(e.target.value)} className="bg-secondary border border-border rounded-lg px-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary" />
                 <input placeholder="Price" type="number" value={pPrice} onChange={(e) => setPPrice(e.target.value)} className="bg-secondary border border-border rounded-lg px-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary" />
-                <input placeholder="Image URL" value={pImage} onChange={(e) => setPImage(e.target.value)} className="bg-secondary border border-border rounded-lg px-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary" />
+                <div className="sm:col-span-2 space-y-2">
+                  <label className="block text-sm text-muted-foreground">Upload Images (jpg, png, webp)</label>
+                  <input type="file" multiple accept="image/jpeg,image/png,image/webp" onChange={(e) => setPImages(Array.from(e.target.files || []))} className="bg-secondary border border-border rounded-lg px-4 py-2 text-foreground file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:bg-primary file:text-primary-foreground file:text-sm file:font-medium file:cursor-pointer w-full" />
+                  {pImages.length > 0 && <p className="text-xs text-muted-foreground">{pImages.length} new file(s) selected</p>}
+                  {pExistingImages.length > 0 && (
+                    <div className="flex gap-2 flex-wrap">
+                      {pExistingImages.map((url, i) => (
+                        <div key={i} className="relative group">
+                          <img src={url} alt="" className="w-16 h-16 rounded-lg object-cover bg-secondary" />
+                          <button onClick={() => setPExistingImages(prev => prev.filter((_, idx) => idx !== i))} className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground rounded-full w-5 h-5 text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">×</button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
                 <select value={pCat} onChange={(e) => setPCat(e.target.value)} className="bg-secondary border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary">
                   <option value="">No Category</option>
                   {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -135,8 +177,8 @@ const Admin = () => {
                 <input type="checkbox" checked={pFeatured} onChange={(e) => setPFeatured(e.target.checked)} className="accent-primary" /> Featured
               </label>
               <div className="flex gap-2">
-                <button onClick={handleSaveProduct} className="flex items-center gap-2 bg-primary text-primary-foreground rounded-lg px-6 py-2 font-medium hover:opacity-90">
-                  <Plus size={16} /> {editingProduct ? "Update" : "Add Product"}
+                <button onClick={handleSaveProduct} disabled={uploading} className="flex items-center gap-2 bg-primary text-primary-foreground rounded-lg px-6 py-2 font-medium hover:opacity-90 disabled:opacity-50">
+                  {uploading ? <><Loader2 size={16} className="animate-spin" /> Uploading...</> : <><Upload size={16} /> {editingProduct ? "Update" : "Add Product"}</>}
                 </button>
                 {editingProduct && (
                   <button onClick={resetProductForm} className="px-4 py-2 rounded-lg border border-border text-muted-foreground hover:text-foreground">Cancel</button>
