@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useProducts, useCategories } from "@/hooks/useProducts";
 import { useToast } from "@/hooks/use-toast";
 import { Plus, Trash2, Edit2, Package, FolderOpen, ShoppingBag } from "lucide-react";
+import type { Json } from "@/integrations/supabase/types";
 
 const ADMIN_EMAIL = "pragya@gmail.com";
 
@@ -46,10 +47,10 @@ const Admin = () => {
   };
 
   const handleSaveProduct = async () => {
-    const payload: any = {
+    const payload = {
       name: pName,
       price: parseFloat(pPrice),
-      description: pDesc,
+      description: pDesc || null,
       category_id: pCat || null,
       images: pImage ? [pImage] : [],
       featured: pFeatured,
@@ -96,13 +97,12 @@ const Admin = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-dark pt-20 px-4">
+    <div className="min-h-screen bg-gradient-dark pt-20 px-4 pb-12">
       <div className="container mx-auto">
         <h1 className="text-4xl font-bold mb-8">
           Admin <span className="text-gradient">Dashboard</span>
         </h1>
 
-        {/* Tabs */}
         <div className="flex gap-2 mb-8">
           {tabs.map((t) => (
             <button
@@ -117,7 +117,6 @@ const Admin = () => {
           ))}
         </div>
 
-        {/* Products */}
         {tab === "products" && (
           <div className="space-y-6">
             <div className="glass-card rounded-xl p-6 space-y-4">
@@ -161,7 +160,6 @@ const Admin = () => {
           </div>
         )}
 
-        {/* Categories */}
         {tab === "categories" && (
           <div className="space-y-6">
             <div className="glass-card rounded-xl p-6">
@@ -183,11 +181,10 @@ const Admin = () => {
           </div>
         )}
 
-        {/* Orders */}
         {tab === "orders" && (
           <div className="space-y-3">
             {orders.length === 0 && <p className="text-muted-foreground text-center py-12">No orders yet</p>}
-            {orders.map((o: any) => (
+            {orders.map((o) => (
               <div key={o.id} className="glass-card rounded-xl p-4">
                 <div className="flex justify-between items-start mb-2">
                   <span className="text-sm text-muted-foreground">Order #{o.id.slice(0, 8)}</span>

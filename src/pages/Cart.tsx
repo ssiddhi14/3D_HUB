@@ -19,13 +19,12 @@ const Cart = () => {
       return;
     }
 
-    // Create order
     const { error } = await supabase.from("orders").insert({
       user_id: user.id,
       items: items as any,
       total,
       status: "pending",
-    } as any);
+    });
 
     if (error) {
       toast({ title: "Error creating order", variant: "destructive" });

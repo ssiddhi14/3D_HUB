@@ -26,7 +26,7 @@ const Customize = () => {
       size,
       material,
       status: "pending",
-    } as any);
+    });
 
     if (error) {
       toast({ title: "Error submitting order", variant: "destructive" });

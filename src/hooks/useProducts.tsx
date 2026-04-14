@@ -7,9 +7,10 @@ export interface Product {
   price: number;
   description: string | null;
   category_id: string | null;
-  images: string[];
-  featured: boolean;
+  images: string[] | null;
+  featured: boolean | null;
   created_at: string;
+  updated_at: string;
 }
 
 export interface Category {
@@ -25,7 +26,7 @@ export const useProducts = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       const { data } = await supabase.from("products").select("*").order("created_at", { ascending: false });
-      if (data) setProducts(data as unknown as Product[]);
+      if (data) setProducts(data);
       setLoading(false);
     };
 
@@ -51,7 +52,7 @@ export const useCategories = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       const { data } = await supabase.from("categories").select("*").order("name");
-      if (data) setCategories(data as unknown as Category[]);
+      if (data) setCategories(data);
       setLoading(false);
     };
 
