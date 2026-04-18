@@ -9,6 +9,9 @@ import type { Json } from "@/integrations/supabase/types";
 
 const ADMIN_EMAIL = "pragya@gmail.com";
 
+const isAdmin = (email?: string | null) =>
+  !!email && email.trim().toLowerCase() === ADMIN_EMAIL;
+
 const Admin = () => {
   const { user, loading: authLoading } = useAuth();
   const { toast } = useToast();
@@ -42,7 +45,15 @@ const Admin = () => {
   }, []);
 
   if (authLoading) return <div className="min-h-screen bg-gradient-dark flex items-center justify-center text-muted-foreground">Loading...</div>;
-  if (!user || user.email !== ADMIN_EMAIL) return <Navigate to="/auth" replace />;
+  if (!user) return <Navigate to="/auth" replace />;
+  if (!isAdmin(user.email)) return (
+    <div className="min-h-screen bg-gradient-dark flex flex-col items-center justify-center text-center px-4 gap-3">
+      <h1 className="text-2xl font-bold text-foreground">Access Denied</h1>
+      <p className="text-muted-foreground max-w-md">
+        You're signed in as <span className="text-primary">{user.email}</span>, but the admin panel is only available to <span className="text-primary">{ADMIN_EMAIL}</span>.
+      </p>
+    </div>
+  );
 
   const resetProductForm = () => {
     setPName(""); setPPrice(""); setPDesc(""); setPCat(""); setPImages([]); setPExistingImages([]); setPFeatured(false); setEditingProduct(null);
