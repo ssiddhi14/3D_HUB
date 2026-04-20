@@ -1,5 +1,6 @@
 import { ShoppingCart, Heart } from "lucide-react";
 import { useCart } from "@/hooks/useCart";
+import { useWishlist } from "@/hooks/useWishlist";
 import { motion } from "framer-motion";
 import type { Product } from "@/hooks/useProducts";
 
@@ -10,7 +11,14 @@ interface Props {
 
 const ProductCard = ({ product, onWishlist }: Props) => {
   const { addToCart } = useCart();
+  const { isWishlisted, toggleWishlist } = useWishlist();
   const image = product.images?.[0] || "/placeholder.svg";
+  const wished = isWishlisted(product.id);
+
+  const handleWishlist = () => {
+    toggleWishlist({ id: product.id, name: product.name, price: product.price, image });
+    onWishlist?.();
+  };
 
   return (
     <motion.div
@@ -36,10 +44,15 @@ const ProductCard = ({ product, onWishlist }: Props) => {
             <ShoppingCart size={16} /> Add to Cart
           </button>
           <button
-            onClick={onWishlist}
-            className="p-2 rounded-lg border border-border text-muted-foreground hover:text-primary hover:border-primary transition-colors"
+            onClick={handleWishlist}
+            aria-label={wished ? "Remove from wishlist" : "Add to wishlist"}
+            className={`p-2 rounded-lg border transition-colors ${
+              wished
+                ? "border-primary text-primary"
+                : "border-border text-muted-foreground hover:text-primary hover:border-primary"
+            }`}
           >
-            <Heart size={16} />
+            <Heart size={16} fill={wished ? "currentColor" : "none"} />
           </button>
         </div>
       </div>
