@@ -4,6 +4,7 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import HeroScene from "@/components/HeroScene";
 import ProductCard from "@/components/ProductCard";
 import { useProducts, useCategories } from "@/hooks/useProducts";
+import logo from "@/assets/logo.png";
 
 const Index = () => {
   const { products } = useProducts();
@@ -17,11 +18,19 @@ const Index = () => {
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <HeroScene />
         <div className="relative z-10 text-center px-4">
+          <motion.img
+            src={logo}
+            alt="3D HUB logo"
+            initial={{ opacity: 0, y: 30, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            className="mx-auto mb-6 h-24 md:h-32 w-auto object-contain drop-shadow-[0_0_30px_hsl(var(--primary)/0.5)]"
+          />
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-5xl md:text-7xl font-bold mb-6"
+            transition={{ duration: 0.8, delay: 0.1 }}
+            className="text-4xl md:text-6xl font-bold mb-6"
           >
             Welcome to <span className="text-gradient">3D HUB</span>
           </motion.h1>
@@ -105,8 +114,9 @@ const Index = () => {
 
       {/* Footer */}
       <footer className="border-t border-border py-8 px-4">
-        <div className="container mx-auto text-center text-muted-foreground text-sm">
-          © 2026 3D HUB. All rights reserved.
+        <div className="container mx-auto flex flex-col items-center gap-3 text-muted-foreground text-sm">
+          <img src={logo} alt="3D HUB logo" className="h-10 w-auto object-contain opacity-90" />
+          <p>© 2026 3D HUB. All rights reserved.</p>
         </div>
       </footer>
     </div>
