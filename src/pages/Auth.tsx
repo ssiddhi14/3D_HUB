@@ -15,8 +15,13 @@ const Auth = () => {
   const { toast } = useToast();
   const { user } = useAuth();
 
+  const ADMIN_EMAIL = "pragya@gmail.com";
+  const isAdminEmail = (e?: string | null) =>
+    !!e && e.trim().toLowerCase() === ADMIN_EMAIL;
+  const routeFor = (e?: string | null) => (isAdminEmail(e) ? "/admin" : "/");
+
   useEffect(() => {
-    if (user) navigate("/");
+    if (user) navigate(routeFor(user.email), { replace: true });
   }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -24,11 +29,11 @@ const Auth = () => {
     setLoading(true);
 
     if (isLogin) {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) {
         toast({ title: error.message, variant: "destructive" });
       } else {
-        navigate("/");
+        navigate(routeFor(data.user?.email ?? email), { replace: true });
       }
     } else {
       const { error } = await supabase.auth.signUp({ email, password });
@@ -50,7 +55,7 @@ const Auth = () => {
       toast({ title: result.error.message || "Google login failed", variant: "destructive" });
     }
     if (result.redirected) return;
-    navigate("/");
+    // useEffect will handle role-based redirect once user state updates
   };
 
   return (
