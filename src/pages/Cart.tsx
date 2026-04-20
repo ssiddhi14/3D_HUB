@@ -241,7 +241,7 @@ const Cart = () => {
                     setCoupon(e.target.value);
                     setCouponError("");
                   }}
-                  placeholder="Try SAVE10"
+                  placeholder="Enter coupon code"
                   className="flex-1 bg-secondary border border-border rounded-lg px-3 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary uppercase"
                 />
                 <button
