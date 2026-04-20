@@ -21,7 +21,11 @@ const Auth = () => {
   const routeFor = (e?: string | null) => (isAdminEmail(e) ? "/admin" : "/");
 
   useEffect(() => {
-    if (user) navigate(routeFor(user.email), { replace: true });
+    if (user) {
+      const dest = routeFor(user.email);
+      console.log("[Auth] Already logged in, redirecting to:", dest, "email:", user.email);
+      navigate(dest, { replace: true });
+    }
   }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -32,18 +36,36 @@ const Auth = () => {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) {
         toast({ title: error.message, variant: "destructive" });
+        setLoading(false);
       } else {
-        navigate(routeFor(data.user?.email ?? email), { replace: true });
+        const userEmail = data.user?.email ?? email;
+        const dest = routeFor(userEmail);
+        console.log("[Auth] Login success, redirecting to:", dest, "email:", userEmail);
+        toast({ title: isAdminEmail(userEmail) ? "Welcome admin!" : "Welcome back!" });
+        // Use window.location for a hard redirect to guarantee navigation
+        window.location.href = dest;
       }
     } else {
-      const { error } = await supabase.auth.signUp({ email, password });
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { emailRedirectTo: window.location.origin },
+      });
       if (error) {
         toast({ title: error.message, variant: "destructive" });
+        setLoading(false);
+      } else if (data.session) {
+        // Auto-confirm is on, user is logged in immediately
+        const userEmail = data.user?.email ?? email;
+        const dest = routeFor(userEmail);
+        console.log("[Auth] Signup success (auto-confirmed), redirecting to:", dest);
+        toast({ title: isAdminEmail(userEmail) ? "Admin account created!" : "Account created!" });
+        window.location.href = dest;
       } else {
         toast({ title: "Check your email to confirm signup!" });
+        setLoading(false);
       }
     }
-    setLoading(false);
   };
 
   const handleGoogleLogin = async () => {
