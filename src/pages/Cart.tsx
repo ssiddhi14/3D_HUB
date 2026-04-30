@@ -210,6 +210,20 @@ const Cart = () => {
                 placeholder="Enter your name"
                 className="w-full bg-secondary border border-border rounded-lg px-3 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               />
+              {errors.name && <p className="text-destructive text-xs mt-1">{errors.name}</p>}
+            </div>
+            <div>
+              <label className="block text-sm text-muted-foreground mb-1">Phone Number</label>
+              <input
+                type="tel"
+                inputMode="numeric"
+                maxLength={10}
+                value={phone}
+                onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                placeholder="10-digit mobile number"
+                className="w-full bg-secondary border border-border rounded-lg px-3 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+              {errors.phone && <p className="text-destructive text-xs mt-1">{errors.phone}</p>}
             </div>
             <div>
               <label className="block text-sm text-muted-foreground mb-1">Address</label>
@@ -220,6 +234,20 @@ const Cart = () => {
                 rows={2}
                 className="w-full bg-secondary border border-border rounded-lg px-3 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary resize-none"
               />
+              {errors.address && <p className="text-destructive text-xs mt-1">{errors.address}</p>}
+            </div>
+            <div>
+              <label className="block text-sm text-muted-foreground mb-1">Pincode</label>
+              <input
+                type="text"
+                inputMode="numeric"
+                maxLength={6}
+                value={pincode}
+                onChange={(e) => setPincode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                placeholder="6-digit pincode"
+                className="w-full bg-secondary border border-border rounded-lg px-3 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+              {errors.pincode && <p className="text-destructive text-xs mt-1">{errors.pincode}</p>}
             </div>
             <div>
               <label className="block text-sm text-muted-foreground mb-1">Email (auto-filled)</label>
@@ -230,6 +258,7 @@ const Cart = () => {
                 placeholder="email@example.com"
                 className="w-full bg-secondary border border-border rounded-lg px-3 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               />
+              {errors.email && <p className="text-destructive text-xs mt-1">{errors.email}</p>}
             </div>
           </div>
         </div>
