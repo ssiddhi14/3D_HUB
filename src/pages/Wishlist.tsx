@@ -31,6 +31,9 @@ const Wishlist = () => {
             className="text-4xl font-bold"
           >
             Your <span className="text-gradient">Wishlist</span>
+            <span className="ml-3 text-base font-medium text-muted-foreground align-middle">
+              ({items.length} {items.length === 1 ? "item" : "items"})
+            </span>
           </motion.h1>
           <button
             onClick={clearWishlist}
