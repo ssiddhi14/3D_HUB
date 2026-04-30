@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { ShoppingCart, Heart, User, Menu, X, LogOut } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/hooks/useCart";
+import { useWishlist } from "@/hooks/useWishlist";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "@/assets/logo.png";
 
@@ -11,6 +12,7 @@ const Navbar = () => {
   const { pathname } = useLocation();
   const { user, signOut } = useAuth();
   const { cartCount } = useCart();
+  const { items: wishlistItems } = useWishlist();
 
   const links = [
     { to: "/", label: "Home" },
@@ -44,6 +46,11 @@ const Navbar = () => {
         <div className="flex items-center gap-4">
           <Link to="/wishlist" className="relative text-muted-foreground hover:text-primary transition-colors">
             <Heart size={20} />
+            {wishlistItems.length > 0 && (
+              <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                {wishlistItems.length}
+              </span>
+            )}
           </Link>
           <Link to="/cart" className="relative text-muted-foreground hover:text-primary transition-colors">
             <ShoppingCart size={20} />
