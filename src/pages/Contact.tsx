@@ -1,6 +1,14 @@
 import { Link } from "react-router-dom";
-import { Mail, Phone, Instagram, ArrowLeft } from "lucide-react";
+import { Mail, Phone, ArrowLeft } from "lucide-react";
 import { contactInfo, socialLinks } from "@/config/footer";
+
+const InstagramIcon = ({ size = 20 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+  </svg>
+);
 
 const Contact = () => {
   return (
@@ -50,7 +58,7 @@ const Contact = () => {
                 rel="noreferrer"
                 className="flex items-center gap-3 p-4 glass rounded-xl hover-glow transition-all"
               >
-                <Instagram className="text-primary" size={20} />
+                <span className="text-primary"><InstagramIcon size={20} /></span>
                 <div>
                   <p className="text-xs text-muted-foreground">Social</p>
                   <p className="text-sm font-medium">{s.label}</p>

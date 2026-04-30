@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Instagram, Mail, Phone, Send } from "lucide-react";
+import { Mail, Phone, Send } from "lucide-react";
+
+const InstagramIcon = ({ size = 16 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+  </svg>
+);
 import { toast } from "sonner";
 import logo from "@/assets/logo.png";
 import { Input } from "@/components/ui/input";
@@ -48,7 +56,7 @@ const Footer = () => {
                   aria-label={s.label}
                   className="w-9 h-9 rounded-full glass flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary transition-all hover-glow"
                 >
-                  {s.icon === "instagram" && <Instagram size={16} />}
+                  {s.icon === "instagram" && <InstagramIcon size={16} />}
                 </a>
               ))}
             </div>
