@@ -23,10 +23,13 @@ const Cart = () => {
   const { toast } = useToast();
 
   const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+  const [pincode, setPincode] = useState("");
   const [email, setEmail] = useState("");
   const [coupon, setCoupon] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [couponError, setCouponError] = useState("");
 
   // Load saved form + autofill email
@@ -36,7 +39,9 @@ const Cart = () => {
       if (saved) {
         const parsed = JSON.parse(saved);
         setName(parsed.name || "");
+        setPhone(parsed.phone || "");
         setAddress(parsed.address || "");
+        setPincode(parsed.pincode || "");
         setEmail(parsed.email || "");
       }
     } catch {}
@@ -61,9 +66,9 @@ const Cart = () => {
   useEffect(() => {
     localStorage.setItem(
       CHECKOUT_FORM_KEY,
-      JSON.stringify({ name, address, email })
+      JSON.stringify({ name, phone, address, pincode, email })
     );
-  }, [name, address, email]);
+  }, [name, phone, address, pincode, email]);
 
   const discount = useMemo(() => {
     if (!appliedCoupon) return 0;
@@ -99,20 +104,34 @@ const Cart = () => {
     setCouponError("");
   };
 
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+    if (!name.trim()) newErrors.name = "Full name is required";
+    if (!phone.trim()) newErrors.phone = "Phone number is required";
+    else if (!/^\d{10}$/.test(phone.trim())) newErrors.phone = "Phone must be exactly 10 digits";
+    if (!address.trim()) newErrors.address = "Address is required";
+    if (!pincode.trim()) newErrors.pincode = "Pincode is required";
+    else if (!/^\d{6}$/.test(pincode.trim())) newErrors.pincode = "Pincode must be exactly 6 digits";
+    if (!email.trim()) newErrors.email = "Email is required";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) newErrors.email = "Enter a valid email";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleCheckout = async () => {
     if (!user) {
       toast({ title: "Please login to checkout", variant: "destructive" });
       navigate("/auth");
       return;
     }
-    if (!name.trim() || !address.trim() || !email.trim()) {
-      toast({ title: "Please fill in name, address and email", variant: "destructive" });
+    if (!validateForm()) {
+      toast({ title: "Please fix the errors in the form", variant: "destructive" });
       return;
     }
 
     const { error } = await supabase.from("orders").insert({
       user_id: user.id,
-      items: { products: items, name, address, email, coupon: appliedCoupon, discount, delivery: deliveryCharge } as any,
+      items: { products: items, name, phone, address, pincode, email, coupon: appliedCoupon, discount, delivery: deliveryCharge } as any,
       total: finalTotal,
       status: "pending",
     });
@@ -122,6 +141,7 @@ const Cart = () => {
     } else {
       clearCart();
       handleRemoveCoupon();
+      setErrors({});
       toast({ title: "Order placed successfully!" });
     }
   };
@@ -190,6 +210,20 @@ const Cart = () => {
                 placeholder="Enter your name"
                 className="w-full bg-secondary border border-border rounded-lg px-3 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               />
+              {errors.name && <p className="text-destructive text-xs mt-1">{errors.name}</p>}
+            </div>
+            <div>
+              <label className="block text-sm text-muted-foreground mb-1">Phone Number</label>
+              <input
+                type="tel"
+                inputMode="numeric"
+                maxLength={10}
+                value={phone}
+                onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                placeholder="10-digit mobile number"
+                className="w-full bg-secondary border border-border rounded-lg px-3 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+              {errors.phone && <p className="text-destructive text-xs mt-1">{errors.phone}</p>}
             </div>
             <div>
               <label className="block text-sm text-muted-foreground mb-1">Address</label>
@@ -200,6 +234,20 @@ const Cart = () => {
                 rows={2}
                 className="w-full bg-secondary border border-border rounded-lg px-3 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary resize-none"
               />
+              {errors.address && <p className="text-destructive text-xs mt-1">{errors.address}</p>}
+            </div>
+            <div>
+              <label className="block text-sm text-muted-foreground mb-1">Pincode</label>
+              <input
+                type="text"
+                inputMode="numeric"
+                maxLength={6}
+                value={pincode}
+                onChange={(e) => setPincode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                placeholder="6-digit pincode"
+                className="w-full bg-secondary border border-border rounded-lg px-3 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+              {errors.pincode && <p className="text-destructive text-xs mt-1">{errors.pincode}</p>}
             </div>
             <div>
               <label className="block text-sm text-muted-foreground mb-1">Email (auto-filled)</label>
@@ -210,6 +258,7 @@ const Cart = () => {
                 placeholder="email@example.com"
                 className="w-full bg-secondary border border-border rounded-lg px-3 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               />
+              {errors.email && <p className="text-destructive text-xs mt-1">{errors.email}</p>}
             </div>
           </div>
         </div>
