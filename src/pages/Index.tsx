@@ -112,13 +112,6 @@ const Index = () => {
         </section>
       )}
 
-      {/* Footer */}
-      <footer className="border-t border-border py-8 px-4">
-        <div className="container mx-auto flex flex-col items-center gap-3 text-muted-foreground text-sm">
-          <img src={logo} alt="3D HUB logo" className="h-10 w-auto object-contain opacity-90" />
-          <p>© 2026 3D HUB. All rights reserved.</p>
-        </div>
-      </footer>
     </div>
   );
 };
