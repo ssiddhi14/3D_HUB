@@ -39,7 +39,9 @@ const Cart = () => {
       if (saved) {
         const parsed = JSON.parse(saved);
         setName(parsed.name || "");
+        setPhone(parsed.phone || "");
         setAddress(parsed.address || "");
+        setPincode(parsed.pincode || "");
         setEmail(parsed.email || "");
       }
     } catch {}
@@ -64,9 +66,9 @@ const Cart = () => {
   useEffect(() => {
     localStorage.setItem(
       CHECKOUT_FORM_KEY,
-      JSON.stringify({ name, address, email })
+      JSON.stringify({ name, phone, address, pincode, email })
     );
-  }, [name, address, email]);
+  }, [name, phone, address, pincode, email]);
 
   const discount = useMemo(() => {
     if (!appliedCoupon) return 0;
