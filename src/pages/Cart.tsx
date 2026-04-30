@@ -23,10 +23,13 @@ const Cart = () => {
   const { toast } = useToast();
 
   const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+  const [pincode, setPincode] = useState("");
   const [email, setEmail] = useState("");
   const [coupon, setCoupon] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [couponError, setCouponError] = useState("");
 
   // Load saved form + autofill email
