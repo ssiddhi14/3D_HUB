@@ -104,20 +104,34 @@ const Cart = () => {
     setCouponError("");
   };
 
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+    if (!name.trim()) newErrors.name = "Full name is required";
+    if (!phone.trim()) newErrors.phone = "Phone number is required";
+    else if (!/^\d{10}$/.test(phone.trim())) newErrors.phone = "Phone must be exactly 10 digits";
+    if (!address.trim()) newErrors.address = "Address is required";
+    if (!pincode.trim()) newErrors.pincode = "Pincode is required";
+    else if (!/^\d{6}$/.test(pincode.trim())) newErrors.pincode = "Pincode must be exactly 6 digits";
+    if (!email.trim()) newErrors.email = "Email is required";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) newErrors.email = "Enter a valid email";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleCheckout = async () => {
     if (!user) {
       toast({ title: "Please login to checkout", variant: "destructive" });
       navigate("/auth");
       return;
     }
-    if (!name.trim() || !address.trim() || !email.trim()) {
-      toast({ title: "Please fill in name, address and email", variant: "destructive" });
+    if (!validateForm()) {
+      toast({ title: "Please fix the errors in the form", variant: "destructive" });
       return;
     }
 
     const { error } = await supabase.from("orders").insert({
       user_id: user.id,
-      items: { products: items, name, address, email, coupon: appliedCoupon, discount, delivery: deliveryCharge } as any,
+      items: { products: items, name, phone, address, pincode, email, coupon: appliedCoupon, discount, delivery: deliveryCharge } as any,
       total: finalTotal,
       status: "pending",
     });
@@ -127,6 +141,7 @@ const Cart = () => {
     } else {
       clearCart();
       handleRemoveCoupon();
+      setErrors({});
       toast({ title: "Order placed successfully!" });
     }
   };
