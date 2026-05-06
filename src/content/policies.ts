@@ -16,121 +16,125 @@ export type PolicyContent = {
 export const policyContent: Record<string, PolicyContent> = {
   "refund-cancellation": {
     title: "Refund & Cancellation Policy",
-    updatedAt: "April 2026",
+    updatedAt: "May 2026",
     intro:
-      "We want every 3D HUB order to delight you. If something isn't right, here is how refunds and cancellations work.",
+      "At 3D Products, all orders are processed only after confirmation and payment as per our payment policy. Please review the refund and cancellation terms below carefully before placing your order.",
     sections: [
       {
-        heading: "Order Cancellation",
-        body: "Orders can be cancelled free of charge within 12 hours of placing them, provided they have not yet entered production. Custom and made-to-order items cannot be cancelled once production begins.",
+        heading: "Refund Policy",
+        body: "Once an order is successfully placed, no refunds will be issued under any circumstances. Customers are requested to review product details carefully before placing the order. Only exchanges or replacements are allowed if the product is received damaged or defective and valid proof is provided.",
       },
       {
-        heading: "Refund Eligibility",
-        body: "Refunds are available for damaged, defective, or incorrect items. Please raise a request within 7 days of delivery with photos of the product and packaging.",
-      },
-      {
-        heading: "Refund Timeline",
-        body: "Approved refunds are processed within 5–7 business days to the original payment method. Bank settlement may take an additional 2–3 business days.",
-      },
-      {
-        heading: "Non-Refundable Items",
-        body: "Personalized, customized, or clearance items are not eligible for refunds unless they arrive damaged or defective.",
+        heading: "Cancellation Policy",
+        body: "Orders cannot be cancelled once they are confirmed. For Cash on Delivery (COD) orders, the advance amount paid to confirm the order is non-refundable. Customised or made-to-order products cannot be cancelled after production begins.",
       },
     ],
   },
   shipping: {
     title: "Shipping Policy",
-    updatedAt: "April 2026",
+    updatedAt: "May 2026",
     intro:
-      "We ship pan-India through trusted courier partners. Here's what to expect after you place your order.",
+      "Here is everything you need to know about how we process and ship your 3D Products order.",
     sections: [
       {
-        heading: "Processing Time",
-        body: "Ready-to-ship items are dispatched within 1–2 business days. Custom orders are dispatched within 5–10 business days depending on complexity.",
+        heading: "Order Processing",
+        body: "Orders are processed after successful payment confirmation. COD orders require a minimum 50% advance payment to confirm the order.",
       },
       {
-        heading: "Delivery Time",
-        body: "Standard delivery takes 3–7 business days across India. Remote pin codes may take an additional 2–3 days.",
+        heading: "Dispatch Timeline",
+        body: "Orders are dispatched within the promised timeframe. Processing time may vary depending on order quantity and product type.",
       },
       {
-        heading: "Shipping Charges",
-        body: "Free shipping on all prepaid orders above ₹500. A flat ₹50 shipping fee applies to orders below this value.",
+        heading: "Delivery",
+        body: "Delivery timelines depend on the customer's location and courier availability. Delays caused by logistics partners, weather conditions, or unforeseen circumstances are beyond our control.",
       },
       {
-        heading: "Order Tracking",
-        body: "Once dispatched, you will receive a tracking link via email and SMS. You can also view order status from your account.",
+        heading: "Packaging",
+        body: "All products are checked carefully and securely packed before dispatch to ensure safe delivery.",
       },
     ],
   },
   return: {
     title: "Return Policy",
-    updatedAt: "April 2026",
+    updatedAt: "May 2026",
     intro:
-      "Returns are accepted for eligible items in their original condition. Please review the conditions below before raising a return.",
+      "We provide a 10-day return or exchange window from the date of delivery, subject to the conditions outlined below.",
     sections: [
       {
-        heading: "Return Window",
-        body: "You may request a return within 7 days of delivery. Items must be unused, in original packaging, and include all tags and accessories.",
+        heading: "Required Video Proof",
+        body: "Customers must record a proper unboxing video that clearly shows: the sealed package before opening, the complete unboxing process, and the condition of the product received.",
       },
       {
-        heading: "How to Initiate a Return",
-        body: "Email support@3dhub.com with your order ID and reason for return. Our team will arrange a reverse pickup wherever serviceable.",
+        heading: "Exchange or Return Process",
+        body: "Customers requesting a return or exchange must also record a repacking video while packing the product. Damaged or defective products will only qualify for exchange if valid video proof is submitted. Requests without proper proof will not be accepted.",
       },
       {
-        heading: "Inspection & Approval",
-        body: "Returned items are inspected within 48 hours of receipt. Approved returns are refunded or exchanged based on your preference.",
-      },
-      {
-        heading: "Items Not Eligible",
-        body: "Customized prints, gift cards, and clearance items cannot be returned unless they arrive damaged or defective.",
+        heading: "Important Conditions",
+        body: "Products must be unused and returned in their original packaging. Customised products are not eligible for return or exchange.",
       },
     ],
   },
   privacy: {
     title: "Privacy Policy",
-    updatedAt: "April 2026",
+    updatedAt: "May 2026",
     intro:
-      "Your privacy matters to us. This policy explains what data we collect and how we use it to deliver the 3D HUB experience.",
+      "At 3D Products, customer privacy is important to us. This policy explains what information we collect and how we use it.",
     sections: [
       {
-        heading: "Information We Collect",
-        body: "We collect account details (name, email, phone), shipping address, and order history. Payment data is handled by our PCI-DSS compliant payment partners and never stored on our servers.",
+        heading: "Information Collection",
+        body: "We may collect the following information: name, contact number, shipping address, email address, and payment-related details required for order processing.",
       },
       {
-        heading: "How We Use Your Data",
-        body: "Your data is used to process orders, provide customer support, send order updates, and improve our products. We do not sell your data to third parties.",
+        heading: "Use of Information",
+        body: "Customer information is used only for order confirmation, shipping and delivery updates, customer support, and improving our services.",
       },
       {
-        heading: "Cookies",
-        body: "We use cookies to remember your cart, wishlist, and preferences. You can clear cookies anytime from your browser settings.",
+        heading: "Data Protection",
+        body: "Customer information is kept secure and confidential. We do not sell, rent, or share personal information with third parties except where required for delivery or legal purposes.",
       },
       {
-        heading: "Your Rights",
-        body: "You may request access, correction, or deletion of your personal data by emailing support@3dhub.com.",
+        heading: "Consent",
+        body: "By using our services and placing an order, customers agree to our privacy practices.",
       },
     ],
   },
   terms: {
     title: "Terms & Conditions",
-    updatedAt: "April 2026",
+    updatedAt: "May 2026",
     intro:
-      "By using 3D HUB you agree to the following terms. Please read them carefully.",
+      "By placing an order with 3D Products, you agree to the terms and conditions outlined below.",
     sections: [
       {
-        heading: "Use of the Website",
-        body: "You agree to use this website for lawful purposes only and not to misuse, copy, or redistribute its content without written permission.",
+        heading: "1. Order Confirmation",
+        body: "All orders are confirmed only after payment as per the payment terms mentioned below. Once an order is placed, it is considered final.",
       },
       {
-        heading: "Pricing & Availability",
-        body: "Prices and availability are subject to change without notice. We reserve the right to cancel orders if a pricing or stock error is detected.",
+        heading: "2. Payment Terms",
+        body: "Orders are processed after receiving payment. For Cash on Delivery (COD) orders, a minimum of 50% advance payment of the total bill is required to confirm the order. The remaining amount can be paid at the time of delivery.",
       },
       {
-        heading: "Intellectual Property",
-        body: "All designs, images, and content on 3D HUB are owned by us or our licensors and are protected by copyright laws.",
+        heading: "3. Return & Exchange Policy",
+        body: "We offer a 10-day return or exchange window from the date of delivery. The customer must record a clear unboxing video showing the sealed package before opening, the entire unboxing process, and the condition of the product inside. For exchanges or returns, the customer must also record a video while repacking the product. Damaged or defective items will only be eligible for exchange if valid video proof is provided. Requests without proper video proof will not be accepted.",
       },
       {
-        heading: "Limitation of Liability",
-        body: "3D HUB is not liable for any indirect or consequential damages arising from the use of our products or website beyond the value of the order placed.",
+        heading: "4. No Refund Policy",
+        body: "Once an order is placed, no refunds will be provided under any circumstances. Only exchanges or replacements are allowed as per the return & exchange policy.",
+      },
+      {
+        heading: "5. Customised Orders",
+        body: "All customised or made-to-order products are non-returnable, non-exchangeable, and non-refundable. Customers are advised to review all details carefully before confirming customised orders.",
+      },
+      {
+        heading: "6. Product Condition & Responsibility",
+        body: "We ensure all products are checked and properly packed before dispatch. Any damage claims must be supported with valid unboxing video proof. We are not responsible for issues reported without proper evidence.",
+      },
+      {
+        heading: "7. Delivery",
+        body: "Orders are dispatched within the promised timeline. Delivery timelines may vary depending on location and logistics.",
+      },
+      {
+        heading: "8. Acceptance of Terms",
+        body: "By placing an order, the customer agrees to all the terms and conditions mentioned above.",
       },
     ],
   },
